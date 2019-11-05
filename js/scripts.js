@@ -5,8 +5,11 @@ function BankAccount(name, amount) {
 }
 
 BankAccount.prototype.changeAmount = function(addAmount, subAmount) {
-  this.amount = (!isNaN(addAmount) ? (addAmount + this.Amount) : (this.Amount));
-  this.amount = (!isNaN(subAmount) ? (this.Amount - subAmount) : (this.Amount));
+  if (!isNaN(addAmount)) {
+    this.amount += addAmount;
+  } else if (!isNaN(subAmount)) {
+    this.amount -= subAmount;
+  }
 }
 
 var myAccounts = {
@@ -15,19 +18,22 @@ var myAccounts = {
 // UI
 
 $(document).ready(function () {
+  var display = $("p#output");
   $("form#regForm").submit(function(event) {
     event.preventDefault();
 
     var newAccount = new BankAccount($("input#name").val(), parseFloat($("input#seed").val()));
     myAccounts.accounts.push(newAccount);
+    display.text(myAccounts.accounts[0].amount.toFixed(2));
   });
 
   $("form#depForm").submit(function() {
     event.preventDefault();
 
-    console.log($("input#sub").val());
-
-    myAccounts.accounts[0].changeAmount(parseFloat($("input#add")), parseFloat($("input#sub")));
+    myAccounts.accounts[0].changeAmount(parseFloat($("input#add").val()), parseFloat($("input#sub").val()));
+    display.text(myAccounts.accounts[0].amount.toFixed(2));
   });
+
+
 
 });
